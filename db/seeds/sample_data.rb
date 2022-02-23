@@ -8,7 +8,7 @@ salons_array = [
 				gstin: '12345678AA',
 				pan: 'DRDPK21312',
 				start_time: '9:00',
-				end_time: '23:00',
+				end_time: '22:00',
 				chairs: 5,
 				address: 'SCO: 343 Sector: 11, Panchkula, Haryana',
 				owner_attributes: {
@@ -18,17 +18,17 @@ salons_array = [
 				services_attributes: [
 					{
 						service_id: service_1_id,
-						duration: 20,
+						duration: 50,
 						price: 100
 					},
 					{
 						service_id: service_2_id,
-						duration: 20,
+						duration: 80,
 						price: 120
 					},
 					{
 						service_id: service_3_id,
-						duration: 20,
+						duration: 100,
 						price: 140
 					}
 				]
@@ -38,7 +38,7 @@ salons_array = [
 				gstin: '12345679AA',
 				pan: 'DRDPK21512',
 				start_time: '9:00',
-				end_time: '23:00',
+				end_time: '22:00',
 				chairs: 4,
 				address: 'SCO: 343 Sector: 12, Panchkula, Haryana',
 				owner_attributes: {
@@ -78,10 +78,10 @@ customers_array = [
 	}
 ]
 customers = Customer.create(customers_array)
-salons.first(1).each do |salon|
-	salon.services.first(1).each do |salon_service|
-		customers.first(1).each do |customer|
-			hour = rand(22...23)
+salons.each do |salon|
+	salon.services.each do |salon_service|
+		customers.each do |customer|
+			hour = rand(9...22)
 			start_time = DateTime.now.change({hour: hour})
 			Reservation.create!(salon_service_id: salon_service.id, customer_id: customer.id, price: salon_service.price, start_time: start_time, duration: salon_service.duration)
 		end
