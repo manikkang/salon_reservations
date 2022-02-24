@@ -18,18 +18,18 @@ module Api
         if salon_service.present?
           salon = salon_service.salon
           final_slots = FetchSlots.new({salon_service: salon_service}).list
-          success_json('', { salon_name: salon.name,  service_name: salon_service.service.name, salon_service_id: salon_service.id, slots: final_slots.map{|s| custom_date_time_format(s)} }.as_json, :ok)
+          success_json('', { salon_name: salon.name,  service_name: salon_service.service.name, salon_service_id: salon_service.id, duration: salon_service.duration.to_s + ' Minutes', slots: final_slots.map{|s| custom_date_time_format(s)} }.as_json, :ok)
         else
           error_json(I18n.t('errors.messages.record_not_present', record: 'SalonService'), {}, :not_found)
         end
       end
 
       def reservation
-        reseravtion = Reservation.new(reservation_params)
-        if reseravtion.save
-          success_json('', reservation, :ok)
+        reservation = Reservation.new(reservation_params)
+        if reservation.save
+          success_json('', {reservation: { start_time: reservation.start_time, price: reservation.price, duration: reservation.duration}}.as_json, :ok)
         else
-          error_json(reseravtion.errors.full_messages.to_sentence, {}, :unprocessable_entity)
+          error_json(reservation.errors.full_messages.to_sentence, {}, :unprocessable_entity)
         end
       end 
 

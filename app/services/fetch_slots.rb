@@ -10,7 +10,7 @@ class FetchSlots
 	end
 
 	def list
-		salon_slots = slots_in_range(salon.current_start_time, salon.current_end_time(salon_service.duration))
+		salon_slots = slots_in_range(salon.current_start_time, salon.current_end_time(salon_service.duration)).flat_map { |item| Array.new(salon.chairs, item) }
 		bookings_slots = current_booking_slots
 		final_slots = subtract_each_array_item(salon_slots, bookings_slots).uniq
 		final_slots
@@ -22,8 +22,8 @@ class FetchSlots
 		upcoming_bookings = Reservation.where(salon_service_id: salon_service.id, start_time: Time.current..(salon.current_end_time))
 		reserved_slots = []
 		upcoming_bookings.each do |booking|
-			booking_period_start = ceil_to_30(booking.start_time - booking.duration)
-			booking_period_end = floor_to_30(booking.start_time + booking.duration)
+			booking_period_start = ceil_to_30(booking.start_time - booking.duration.minutes)
+			booking_period_end = floor_to_30(booking.start_time + booking.duration.minutes)
 			reserved_slots << slots_in_range(booking_period_start, booking_period_end)
 		end
 		reserved_slots.flatten
