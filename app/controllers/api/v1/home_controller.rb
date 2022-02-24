@@ -27,7 +27,7 @@ module Api
       def reservation
         reservation = Reservation.new(reservation_params)
         if reservation.save
-          success_json('', {reservation: { start_time: reservation.start_time, price: reservation.price, duration: reservation.duration}}.as_json, :ok)
+          success_json('', ReservationSerializer.new(reservation).serializable_hash, :ok)
         else
           error_json(reservation.errors.full_messages.to_sentence, {}, :unprocessable_entity)
         end
